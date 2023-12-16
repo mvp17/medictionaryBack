@@ -3,7 +3,7 @@ use validator::Validate;
 
 #[derive(Validate, Serialize, Deserialize)]
 pub struct AlarmRequest {
-  #[validate(length(min = 1, message = "alarm name required"))]
+  #[validate(length(min = 1))]
   pub name: String,
   pub time_taking_pill: String,
   pub total_daily_amount: u32,
