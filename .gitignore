@@ -1,0 +1,4 @@
+target
+medictionary.db
+.vscode
+Cargo.lock
