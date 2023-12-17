@@ -1,19 +1,20 @@
-use actix_web::{ web::Path, web::Data, get, post, patch, App, HttpServer, web::Json};
+use actix_web::{ web::Path, web::Data, get, post, patch, App, HttpServer, web::Json };
 use uuid;
 mod models;
 mod db;
 mod error;
-use error::{AlarmError, MedicineError, ReminderError};
-use crate::models::{Reminder, ReminderRequest, UpdateReminderURL};
-use crate::models::{MedicineRequest, UpdateMedicineURL, Medicine};
-use crate::models::{Alarm, UpdateAlarmURL, AlarmRequest};
+use error::{ AlarmError, MedicineError, ReminderError };
+use crate::models::{ Reminder, ReminderRequest, UpdateReminderURL };
+use crate::models::{ MedicineRequest, UpdateMedicineURL, Medicine };
+use crate::models::{ Alarm, UpdateAlarmURL, AlarmRequest };
 use validator::Validate;
-use crate::db::{alarm_data_trait::AlarmDataTrait, 
-                medicine_data_trait::MedicineDataTrait,
-                reminder_data_trait::ReminderDataTrait,
-                Database};
+use crate::db::{ alarm_data_trait::AlarmDataTrait, 
+                 medicine_data_trait::MedicineDataTrait,
+                 reminder_data_trait::ReminderDataTrait,
+                 Database
+                };
 
-#[get("/alarms")]
+#[get("/api/alarms")]
 async fn get_alarms(db: Data<Database>) -> Result<Json<Vec<Alarm>>, AlarmError> {
     let alarms = Database::get_all_alarms(&db).await;
     match alarms {
@@ -22,7 +23,7 @@ async fn get_alarms(db: Data<Database>) -> Result<Json<Vec<Alarm>>, AlarmError> 
     }
 }
 
-#[post("/createAlarm")]
+#[post("/api/createAlarm")]
 async fn create_alarm(alarm: Json<AlarmRequest>, db: Data<Database>) -> Result<Json<Alarm>, AlarmError> {
     let is_valid = alarm.validate();
     match is_valid {
@@ -59,7 +60,7 @@ async fn create_alarm(alarm: Json<AlarmRequest>, db: Data<Database>) -> Result<J
     }
 }
 
-#[patch("/updateAlarm/{uuid}")]
+#[patch("/api/updateAlarm/{uuid}")]
 async fn update_alarm(update_alarm_url: Path<UpdateAlarmURL>, 
                       db: Data<Database>, 
                       updated_alarm_request: Json<AlarmRequest>) -> Result<Json<Alarm>, AlarmError> {
@@ -90,7 +91,7 @@ async fn update_alarm(update_alarm_url: Path<UpdateAlarmURL>,
     }
 }
 
-#[get("/medicines")]
+#[get("/api/medicines")]
 async fn get_medicines(db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {
     let medicines = Database::get_all_medicines(&db).await;
     match medicines {
@@ -99,7 +100,7 @@ async fn get_medicines(db: Data<Database>) -> Result<Json<Vec<Medicine>>, Medici
     }
 }
 
-#[post("/createMedicine")]
+#[post("/api/createMedicine")]
 async fn create_medicine(medicine: Json<MedicineRequest>, db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
     let is_valid = medicine.validate();
     match is_valid {
@@ -130,7 +131,7 @@ async fn create_medicine(medicine: Json<MedicineRequest>, db: Data<Database>) ->
     }
 }
 
-#[patch("/updateMedicine/{uuid}")]
+#[patch("/api/updateMedicine/{uuid}")]
 async fn update_medicine(update_medicine_url: Path<UpdateMedicineURL>, 
                       db: Data<Database>, 
                       updated_medicine_request: Json<MedicineRequest>) -> Result<Json<Medicine>, MedicineError> {
@@ -155,7 +156,7 @@ async fn update_medicine(update_medicine_url: Path<UpdateMedicineURL>,
     }
 }
 
-#[get("/reminders")]
+#[get("/api/reminders")]
 async fn get_reminders(db: Data<Database>) -> Result<Json<Vec<Reminder>>, ReminderError> {
     let reminders = Database::get_all_reminders(&db).await;
     match reminders {
@@ -193,7 +194,7 @@ async fn create_reminder(reminder: Json<ReminderRequest>, db: Data<Database>) ->
     }
 }
 
-#[patch("/updateReminder/{uuid}")]
+#[patch("/api/updateReminder/{uuid}")]
 async fn update_reminder(update_reminder_url: Path<UpdateReminderURL>, 
                       db: Data<Database>, 
                       updated_reminder_request: Json<ReminderRequest>) -> Result<Json<Reminder>, ReminderError> {
