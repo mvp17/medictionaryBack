@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use validator::Validate;
 
 #[derive(Validate, Serialize, Deserialize)]
-pub struct ReminderRequest {
+pub struct ReminderDTO {
   #[validate(length(min = 1))]
   pub medicine: String,
   pub message: String,

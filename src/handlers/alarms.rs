@@ -1,12 +1,11 @@
-
 use actix_web::{ web::Path, web::Data, web::Json };
 use crate::error::AlarmError;
-use crate::models::{ Alarm, UpdateAlarmURL, AlarmRequest };
+use crate::models::{ Alarm, UpdateAlarmURL, AlarmDTO };
 use validator::Validate;
 use crate::db::{ alarm_data_trait::AlarmDataTrait, Database };
 
 
-pub async fn get_alarms(db: Data<Database>) -> Result<Json<Vec<Alarm>>, AlarmError> {
+pub async fn find_all_alarms(db: Data<Database>) -> Result<Json<Vec<Alarm>>, AlarmError> {
     let alarms = Database::get_all_alarms(&db).await;
     match alarms {
         Some(found_alarms) => Ok(Json(found_alarms)),
@@ -14,7 +13,7 @@ pub async fn get_alarms(db: Data<Database>) -> Result<Json<Vec<Alarm>>, AlarmErr
     }
 }
 
-pub async fn create_alarm(alarm: Json<AlarmRequest>, db: Data<Database>) -> Result<Json<Alarm>, AlarmError> {
+pub async fn insert_alarm(alarm: Json<AlarmDTO>, db: Data<Database>) -> Result<Json<Alarm>, AlarmError> {
     let is_valid = alarm.validate();
     match is_valid {
         Ok(_) => {
@@ -52,7 +51,7 @@ pub async fn create_alarm(alarm: Json<AlarmRequest>, db: Data<Database>) -> Resu
 
 pub async fn update_alarm(update_alarm_url: Path<UpdateAlarmURL>, 
                       db: Data<Database>, 
-                      updated_alarm_request: Json<AlarmRequest>) -> Result<Json<Alarm>, AlarmError> {
+                      updated_alarm_request: Json<AlarmDTO>) -> Result<Json<Alarm>, AlarmError> {
     let uuid = update_alarm_url.into_inner().uuid;
 
     let name = updated_alarm_request.name.clone();

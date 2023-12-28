@@ -1,11 +1,11 @@
 use actix_web::{ web::Path, web::Data, web::Json };
 use crate::error::MedicineError;
-use crate::models::{ MedicineRequest, UpdateMedicineURL, Medicine };
+use crate::models::{ MedicineDTO, UpdateMedicineURL, Medicine };
 use crate::db::{ medicine_data_trait::MedicineDataTrait, Database };
 use validator::Validate;
 
 
-pub async fn get_medicines(db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {
+pub async fn find_all_medicines(db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {
     let medicines = Database::get_all_medicines(&db).await;
     match medicines {
         Some(found_medicines) => Ok(Json(found_medicines)),
@@ -13,8 +13,7 @@ pub async fn get_medicines(db: Data<Database>) -> Result<Json<Vec<Medicine>>, Me
     }
 }
 
-
-pub async fn create_medicine(medicine: Json<MedicineRequest>, db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
+pub async fn insert_medicine(medicine: Json<MedicineDTO>, db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
     let is_valid = medicine.validate();
     match is_valid {
         Ok(_) => {
@@ -46,7 +45,7 @@ pub async fn create_medicine(medicine: Json<MedicineRequest>, db: Data<Database>
 
 pub async fn update_medicine(update_medicine_url: Path<UpdateMedicineURL>, 
                       db: Data<Database>, 
-                      updated_medicine_request: Json<MedicineRequest>) -> Result<Json<Medicine>, MedicineError> {
+                      updated_medicine_request: Json<MedicineDTO>) -> Result<Json<Medicine>, MedicineError> {
     let uuid = update_medicine_url.into_inner().uuid;
 
     let name = updated_medicine_request.name.clone();

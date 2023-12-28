@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use validator::Validate;
 
 #[derive(Validate, Serialize, Deserialize)]
-pub struct AlarmRequest {
+pub struct AlarmDTO {
   #[validate(length(min = 1))]
   pub name: String,
   pub time_taking_pill: String,

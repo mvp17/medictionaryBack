@@ -1,11 +1,11 @@
 use actix_web::{ web::Path, web::Data, web::Json };
 use crate::error::ReminderError;
-use crate::models::{ Reminder, ReminderRequest, UpdateReminderURL };
+use crate::models::{ Reminder, ReminderDTO, UpdateReminderURL };
 use crate::db::{ reminder_data_trait::ReminderDataTrait, Database };
 use validator::Validate;
 
 
-pub async fn get_reminders(db: Data<Database>) -> Result<Json<Vec<Reminder>>, ReminderError> {
+pub async fn find_all_reminders(db: Data<Database>) -> Result<Json<Vec<Reminder>>, ReminderError> {
     let reminders = Database::get_all_reminders(&db).await;
     match reminders {
         Some(found_reminders) => Ok(Json(found_reminders)),
@@ -13,7 +13,7 @@ pub async fn get_reminders(db: Data<Database>) -> Result<Json<Vec<Reminder>>, Re
     }
 }
 
-pub async fn create_reminder(reminder: Json<ReminderRequest>, db: Data<Database>) -> Result<Json<Reminder>, ReminderError> {
+pub async fn insert_reminder(reminder: Json<ReminderDTO>, db: Data<Database>) -> Result<Json<Reminder>, ReminderError> {
     let is_valid = reminder.validate();
     match is_valid {
         Ok(_) => {
@@ -43,7 +43,7 @@ pub async fn create_reminder(reminder: Json<ReminderRequest>, db: Data<Database>
 
 pub async fn update_reminder(update_reminder_url: Path<UpdateReminderURL>, 
                       db: Data<Database>, 
-                      updated_reminder_request: Json<ReminderRequest>) -> Result<Json<Reminder>, ReminderError> {
+                      updated_reminder_request: Json<ReminderDTO>) -> Result<Json<Reminder>, ReminderError> {
     let uuid = update_reminder_url.into_inner().uuid;
 
     let medicine = updated_reminder_request.medicine.clone();
