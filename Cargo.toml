@@ -8,8 +8,10 @@ edition = "2021"
 [dependencies]
 actix-web = "4.4.0"
 async-trait = "0.1.74"
+bcrypt = "0.15.0"
 derive_more = "0.99.17"
 json = "0.12.4"
+jsonwebtoken = "9.2.0"
 serde = { version = "1.0.193", features = ["derive"] }
 surrealdb = "1.0.1"
 uuid = "1.6.1"
