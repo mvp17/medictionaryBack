@@ -1,6 +1,6 @@
 use actix_web::web;
 
-use crate::handlers::{users, alarms, medicines, reminders};
+use crate::controllers::{users, alarms, medicines, reminders};
 
 
 pub fn config_services(cfg: &mut web::ServiceConfig) {
@@ -10,6 +10,9 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                 web::scope("/auth")
                     .service(
                         web::resource("/signup").route(web::post().to(users::signup)),
+                    )
+                    .service(
+                        web::resource("/signin").route(web::post().to(users::signin)),
                     )
                     .service(
                         web::resource("/get-users").route(web::get().to(users::find_all_users)),

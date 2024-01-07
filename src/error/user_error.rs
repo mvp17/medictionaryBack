@@ -8,7 +8,9 @@ use derive_more::Display;
 pub enum UserError {
     NoUsersFound,
     UserCreationFailure,
-    NoSuchUserFound
+    NoSuchUserFound,
+    WrongPassword,
+    UserNotExist
 }
 
 impl ResponseError for UserError {
@@ -22,7 +24,9 @@ impl ResponseError for UserError {
         match self {
             UserError::NoUsersFound => StatusCode::NOT_FOUND,
             UserError::UserCreationFailure => StatusCode::INTERNAL_SERVER_ERROR,
-            UserError::NoSuchUserFound => StatusCode::NOT_FOUND
+            UserError::NoSuchUserFound => StatusCode::NOT_FOUND,
+            UserError::WrongPassword => StatusCode::FORBIDDEN,
+            UserError::UserNotExist => StatusCode::BAD_REQUEST
         }
     }
 }

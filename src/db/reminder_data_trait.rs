@@ -23,9 +23,9 @@ impl ReminderDataTrait for Database {
 
     async fn add_reminder(db: &Data<Database>, new_reminder: Reminder) -> Option<Reminder> {
         let created_reminder = db.client
-                                .create(("reminder", new_reminder.uuid.clone()))
-                                .content(new_reminder)
-                                .await;
+            .create(("reminder", new_reminder.uuid.clone()))
+            .content(new_reminder)
+            .await;
         match created_reminder {
             Ok(created) => created,
             Err(_) => None

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-
+use bcrypt::{hash, verify};
 
 
 #[derive(Validate, Serialize, Deserialize)]
@@ -11,7 +11,7 @@ pub struct UserDTO {
   pub password: String,
 }
 
-#[derive(Validate, Debug, Serialize, Deserialize)]
+#[derive(Validate, Debug, Serialize, Deserialize, Default)]
 pub struct User {
   pub uuid: String,
   pub username: String,
@@ -34,7 +34,18 @@ impl User {
       uuid,
       username,
       email,
-      password
+      password: User::hash_password(password)
+    }
+  }
+
+  fn hash_password(password: String) -> String {
+    hash(password, 10).unwrap()
+  }
+
+  pub fn verify_password(&self, password: &str) -> bool {
+    match verify(password, &self.password) {
+      Ok(b) => b,
+      Err(_) => false,
     }
   }
 }

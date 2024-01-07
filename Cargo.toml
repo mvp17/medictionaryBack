@@ -16,3 +16,4 @@ serde = { version = "1.0.193", features = ["derive"] }
 surrealdb = "1.0.1"
 uuid = "1.6.1"
 validator = { version = "0.16.1", features = ["derive"] }
+chrono = "0.4.23"

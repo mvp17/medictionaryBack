@@ -4,6 +4,7 @@ use crate::{error::UserError, models::UserDTO};
 use crate::models::{User, DeleteUserURL};
 use validator::Validate;
 use crate::db::{ user_data_trait::UserDataTrait, Database };
+use crate::controllers::jwt::sign_jwt;
 
 
 pub async fn signup(user: Json<UserDTO>, db: Data<Database>) -> Result<Json<User>, UserError> {
@@ -52,4 +53,19 @@ pub async fn delete_user(delete_user_url: Path<DeleteUserURL>, db: Data<Database
     }
 }
 
-//pub async fn signin(user: Json<UserDTO>, db: Data<Database>) -> Result<>
+pub async fn signin(user: Json<UserDTO>, db: Data<Database>) -> Result<String, UserError> {
+    let user: Option<User> = Database::find_user_by_username(&db, user.username.clone()).await;
+    
+    return if let Some(user) = user {
+        if user.verify_password(&user.password) {
+            let token = sign_jwt(user.username);
+            Ok(token)
+        }
+        else {
+            Err(UserError::WrongPassword)
+        }
+    }
+    else {
+        Err(UserError::UserNotExist)
+    }
+}
