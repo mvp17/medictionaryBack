@@ -8,7 +8,8 @@ use derive_more::Display;
 pub enum MedicineError {
     NoMedicinesFound,
     MedicineCreationFailure,
-    NoSuchMedicineFound
+    NoSuchMedicineFound,
+    WrongPassword
 }
 
 impl ResponseError for MedicineError {
@@ -22,7 +23,8 @@ impl ResponseError for MedicineError {
         match self {
             MedicineError::NoMedicinesFound => StatusCode::NOT_FOUND,
             MedicineError::MedicineCreationFailure => StatusCode::INTERNAL_SERVER_ERROR,
-            MedicineError::NoSuchMedicineFound => StatusCode::NOT_FOUND
+            MedicineError::NoSuchMedicineFound => StatusCode::NOT_FOUND,
+            MedicineError::WrongPassword => StatusCode::FORBIDDEN,
         }
     }
 }

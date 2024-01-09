@@ -14,11 +14,7 @@ struct Claims {
     exp: usize,
 }
 
-/// find user_id from jwt in Authorization field in header
-/// if let Err(e) = validate_request(req, db.client.clone()).await {
-///     return e;
-/// }
-pub async fn validate_request(req: HttpRequest, db: Data<Database>) -> Result<String, HttpResponse> {
+pub async fn validate_request(req: HttpRequest, db: &Data<Database>) -> Result<String, HttpResponse> {
     let access_token = match req.headers().get("Authorization") {
         Some(token) => match token.to_str() {
             Ok(token) => token.replace("Bearer ", ""),

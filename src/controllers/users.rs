@@ -1,10 +1,11 @@
+use actix_web::HttpRequest;
 use actix_web::web::Path;
 use actix_web::{ web::Data, web::Json };
 use crate::{error::UserError, models::UserDTO};
 use crate::models::{User, DeleteUserURL};
 use validator::Validate;
 use crate::db::{ user_data_trait::UserDataTrait, Database };
-use crate::controllers::jwt::sign_jwt;
+use crate::controllers::jwt::{sign_jwt, validate_request};
 
 
 pub async fn signup(user: Json<UserDTO>, db: Data<Database>) -> Result<Json<User>, UserError> {
@@ -35,30 +36,39 @@ pub async fn signup(user: Json<UserDTO>, db: Data<Database>) -> Result<Json<User
     }
 }
 
-pub async fn find_all_users(db: Data<Database>) -> Result<Json<Vec<User>>, UserError> {
-    let users = Database::get_all_users(&db).await;
-    match users {
-        Some(found_users) => Ok(Json(found_users)),
-        None => Err(UserError::NoUsersFound)
+pub async fn find_all_users(req: HttpRequest, db: Data<Database>) -> Result<Json<Vec<User>>, UserError> {
+    match validate_request(req, &db.clone()).await {
+        Ok(_) => {
+            let users = Database::get_all_users(&db).await;
+            match users {
+                Some(found_users) => Ok(Json(found_users)),
+                None => Err(UserError::NoUsersFound)
+            }
+        }
+        Err(_) => Err(UserError::WrongPassword),
     }
 }
 
-pub async fn delete_user(delete_user_url: Path<DeleteUserURL>, db: Data<Database>) -> Result<Json<User>, UserError> {
-    let uuid = delete_user_url.into_inner().uuid;
-    let result = Database::delete_user(&db, uuid).await;
+pub async fn delete_user(delete_user_url: Path<DeleteUserURL>, req: HttpRequest, db: Data<Database>) -> Result<Json<User>, UserError> {
+    match validate_request(req, &db.clone()).await {
+        Ok(_) => {
+            let uuid = delete_user_url.into_inner().uuid;
+            let result = Database::delete_user(&db, uuid).await;
 
-    match result {
-        Some(result) => Ok(Json(result)),
-        None => Err(UserError::NoSuchUserFound)
+            match result {
+                Some(result) => Ok(Json(result)),
+                None => Err(UserError::NoSuchUserFound)
+            }
+        }
+        Err(_) => Err(UserError::WrongPassword),
     }
 }
 
-pub async fn signin(user: Json<UserDTO>, db: Data<Database>) -> Result<String, UserError> {
-    let user: Option<User> = Database::find_user_by_username(&db, user.username.clone()).await;
-    
+pub async fn signin(user_dto: Json<UserDTO>, db: Data<Database>) -> Result<String, UserError> {
+    let user: Option<User> = Database::find_user_by_username(&db, user_dto.username.clone()).await;
     return if let Some(user) = user {
-        if user.verify_password(&user.password) {
-            let token = sign_jwt(user.username);
+        if user.verify_password(&user_dto.password) {
+            let token = sign_jwt(user_dto.username.clone());
             Ok(token)
         }
         else {

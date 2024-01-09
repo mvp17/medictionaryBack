@@ -21,7 +21,7 @@ pub struct User {
 
 #[derive(Serialize, Deserialize)]
 pub struct LoginDTO {
-  pub username_or_email: String,
+  pub email: String,
   pub password: String,
 }
 

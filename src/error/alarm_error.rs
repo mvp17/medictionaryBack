@@ -8,7 +8,8 @@ use derive_more::Display;
 pub enum AlarmError {
     NoAlarmsFound,
     AlarmCreationFailure,
-    NoSuchAlarmFound
+    NoSuchAlarmFound,
+    WrongPassword
 }
 
 impl ResponseError for AlarmError {
@@ -22,7 +23,8 @@ impl ResponseError for AlarmError {
         match self {
             AlarmError::NoAlarmsFound => StatusCode::NOT_FOUND,
             AlarmError::AlarmCreationFailure => StatusCode::INTERNAL_SERVER_ERROR,
-            AlarmError::NoSuchAlarmFound => StatusCode::NOT_FOUND
+            AlarmError::NoSuchAlarmFound => StatusCode::NOT_FOUND,
+            AlarmError::WrongPassword => StatusCode::FORBIDDEN,
         }
     }
 }

@@ -8,7 +8,8 @@ use derive_more::Display;
 pub enum ReminderError {
     NoRemindersFound,
     ReminderCreationFailure,
-    NoSuchReminderFound
+    NoSuchReminderFound,
+    WrongPassword
 }
 
 impl ResponseError for ReminderError {
@@ -22,7 +23,8 @@ impl ResponseError for ReminderError {
         match self {
             ReminderError::NoRemindersFound => StatusCode::NOT_FOUND,
             ReminderError::ReminderCreationFailure => StatusCode::INTERNAL_SERVER_ERROR,
-            ReminderError::NoSuchReminderFound => StatusCode::NOT_FOUND
+            ReminderError::NoSuchReminderFound => StatusCode::NOT_FOUND,
+            ReminderError::WrongPassword => StatusCode::FORBIDDEN,
         }
     }
 }

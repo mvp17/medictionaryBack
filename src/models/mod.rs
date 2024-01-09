@@ -12,6 +12,5 @@ pub use reminder::ReminderDTO;
 pub use reminder::UpdateReminderURL;
 pub mod user;
 pub use user::User;
-pub use user::LoginDTO;
 pub use user::UserDTO;
 pub use user::DeleteUserURL;
