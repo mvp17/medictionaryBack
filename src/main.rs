@@ -1,10 +1,8 @@
 use actix_web::{ web::Data, App, HttpServer, http };
 use actix_cors::Cors;
-mod models;
-mod controllers;
+mod features;
 mod config;
 mod db;
-mod error;
 use crate::db::Database;
 
 

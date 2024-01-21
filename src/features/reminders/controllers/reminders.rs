@@ -1,10 +1,10 @@
 use actix_web::HttpRequest;
 use actix_web::{ web::Path, web::Data, web::Json };
-use crate::error::ReminderError;
-use crate::models::{ Reminder, ReminderDTO, UpdateReminderURL };
-use crate::db::{ reminder_data_trait::ReminderDataTrait, Database };
+use crate::features::reminders::error::ReminderError;
+use crate::features::reminders::db::{ Reminder, ReminderDTO, UpdateReminderURL };
+use crate::features::reminders::db::{ reminder_data_trait::ReminderDataTrait, Database };
 use validator::Validate;
-use super::jwt::validate_request;
+use crate::features::users::controllers::jwt::validate_request;
 
 
 pub async fn find_all_reminders(req: HttpRequest, db: Data<Database>) -> Result<Json<Vec<Reminder>>, ReminderError> {

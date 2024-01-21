@@ -1,11 +1,11 @@
 use actix_web::HttpRequest;
 use actix_web::web::Path;
 use actix_web::{ web::Data, web::Json };
-use crate::{error::UserError, models::UserDTO};
-use crate::models::{User, DeleteUserURL};
+use crate::features::users::error::UserError;
+use crate::features::users::db::{User, DeleteUserURL, UserDTO};
 use validator::Validate;
-use crate::db::{ user_data_trait::UserDataTrait, Database };
-use crate::controllers::jwt::{sign_jwt, validate_request};
+use crate::features::users::db::{ user_data_trait::UserDataTrait, Database };
+use crate::features::users::controllers::jwt::{sign_jwt, validate_request};
 
 
 pub async fn signup(user: Json<UserDTO>, db: Data<Database>) -> Result<Json<User>, UserError> {

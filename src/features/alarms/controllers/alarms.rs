@@ -1,10 +1,10 @@
 use actix_web::HttpRequest;
 use actix_web::{ web::Path, web::Data, web::Json };
-use crate::error::AlarmError;
-use crate::models::{ Alarm, UpdateAlarmURL, AlarmDTO };
+use crate::features::alarms::error::AlarmError;
+use crate::features::alarms::db::{ Alarm, UpdateAlarmURL, AlarmDTO };
+use crate::features::alarms::db::{ alarm_data_trait::AlarmDataTrait, Database };
 use validator::Validate;
-use crate::db::{ alarm_data_trait::AlarmDataTrait, Database };
-use super::jwt::validate_request;
+use crate::features::users::controllers::jwt::validate_request;
 
 
 pub async fn find_all_alarms(req: HttpRequest, db: Data<Database>) -> Result<Json<Vec<Alarm>>, AlarmError> {
