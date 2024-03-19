@@ -9,6 +9,7 @@ pub trait AlarmDataTrait {
     async fn get_all_alarms(db: &Data<Database>) -> Option<Vec<Alarm>>;
     async fn add_alarm(db: &Data<Database>, new_alarm: Alarm) -> Option<Alarm>;
     async fn update_alarm(db: &Data<Database>, uuid: String, updated_alarm: Alarm) -> Option<Alarm>;
+    async fn delete_alarm(db: &Data<Database>, uuid: String) -> Option<Alarm>;
 }
 
 #[async_trait]
@@ -61,6 +62,14 @@ impl AlarmDataTrait for Database {
                 }
             }
             Err(_) => None
+        }
+    }
+
+    async fn delete_alarm(db: &Data<Database>, uuid: String) -> Option<Alarm> {
+        let result: Result<Option<Alarm>, Error> = db.client.delete(("alarm", &uuid)).await;
+        match result {
+            Ok(deleted) => deleted,
+            Err(_) => None,
         }
     }
 }

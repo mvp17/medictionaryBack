@@ -1,7 +1,7 @@
 use actix_web::HttpRequest;
 use actix_web::{ web::Path, web::Data, web::Json };
 use crate::modules::alarms::error::AlarmError;
-use crate::modules::alarms::db::{ Alarm, UpdateAlarmURL, AlarmDTO };
+use crate::modules::alarms::db::{ Alarm, AlarmDTO, AlarmUrlUuid };
 use crate::modules::alarms::db::{ alarm_data_trait::AlarmDataTrait, Database };
 use validator::Validate;
 use crate::modules::users::controllers::jwt::validate_request;
@@ -20,7 +20,9 @@ pub async fn find_all_alarms(req: HttpRequest, db: Data<Database>) -> Result<Jso
     }
 }
 
-pub async fn insert_alarm(alarm: Json<AlarmDTO>, req: HttpRequest, db: Data<Database>) -> Result<Json<Alarm>, AlarmError> {
+pub async fn insert_alarm(alarm: Json<AlarmDTO>, 
+                          req: HttpRequest, 
+                          db: Data<Database>) -> Result<Json<Alarm>, AlarmError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
             let is_valid = alarm.validate();
@@ -61,8 +63,9 @@ pub async fn insert_alarm(alarm: Json<AlarmDTO>, req: HttpRequest, db: Data<Data
     }
 }
 
-pub async fn update_alarm(update_alarm_url: Path<UpdateAlarmURL>, req: HttpRequest, db: Data<Database>, 
-                      updated_alarm_request: Json<AlarmDTO>) -> Result<Json<Alarm>, AlarmError> {
+pub async fn update_alarm(update_alarm_url: Path<AlarmUrlUuid>, 
+                          req: HttpRequest, db: Data<Database>, 
+                          updated_alarm_request: Json<AlarmDTO>) -> Result<Json<Alarm>, AlarmError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
             let uuid = update_alarm_url.into_inner().uuid;
@@ -87,6 +90,22 @@ pub async fn update_alarm(update_alarm_url: Path<UpdateAlarmURL>, req: HttpReque
             let update_result = Database::update_alarm(&db, uuid, updated_alarm).await;
             match update_result {
                 Some(updated_alarm) => Ok(Json(updated_alarm)),
+                None => Err(AlarmError::NoSuchAlarmFound)
+            }
+        }
+        Err(_) => Err(AlarmError::WrongPassword),
+    }
+}
+
+pub async fn delete_alarm(delete_alarm_url: Path<AlarmUrlUuid>, 
+                          req: HttpRequest, db: Data<Database>) -> Result<Json<Alarm>, AlarmError> {
+    match validate_request(req, &db.clone()).await {
+        Ok(_) => {
+            let uuid = delete_alarm_url.into_inner().uuid;
+            let result = Database::delete_alarm(&db, uuid).await;
+
+            match result {
+                Some(result) => Ok(Json(result)),
                 None => Err(AlarmError::NoSuchAlarmFound)
             }
         }

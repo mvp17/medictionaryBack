@@ -48,6 +48,6 @@ impl Alarm {
 }
 
 #[derive(Validate, Deserialize, Serialize)]
-pub struct UpdateAlarmURL {
+pub struct AlarmUrlUuid {
   pub uuid: String
 }

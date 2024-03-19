@@ -20,8 +20,8 @@ pub async fn find_all_reminders(req: HttpRequest, db: Data<Database>) -> Result<
     }
 }
 
-pub async fn insert_reminder(reminder: Json<ReminderDTO>, req: HttpRequest, 
-                             db: Data<Database>) -> Result<Json<Reminder>, ReminderError> {
+pub async fn insert_reminder(reminder: Json<ReminderDTO>, 
+                             req: HttpRequest, db: Data<Database>) -> Result<Json<Reminder>, ReminderError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
             let is_valid = reminder.validate();
@@ -54,9 +54,9 @@ pub async fn insert_reminder(reminder: Json<ReminderDTO>, req: HttpRequest,
     }
 }
 
-pub async fn update_reminder(update_reminder_url: Path<ReminderUrlUuid>, req: HttpRequest,
-                      db: Data<Database>, 
-                      updated_reminder_request: Json<ReminderDTO>) -> Result<Json<Reminder>, ReminderError> {
+pub async fn update_reminder(update_reminder_url: Path<ReminderUrlUuid>, 
+                             req: HttpRequest, db: Data<Database>, 
+                             updated_reminder_request: Json<ReminderDTO>) -> Result<Json<Reminder>, ReminderError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
             let uuid = update_reminder_url.into_inner().uuid;

@@ -1,13 +1,14 @@
 use actix_web::HttpRequest;
 use actix_web::{ web::Path, web::Data, web::Json };
 use crate::modules::medicines::error::MedicineError;
-use crate::modules::medicines::db::{ MedicineDTO, UpdateMedicineURL, Medicine };
+use crate::modules::medicines::db::{ MedicineDTO, MedicineUrlUuid, Medicine };
 use crate::modules::medicines::db::{ medicine_data_trait::MedicineDataTrait, Database };
 use validator::Validate;
 use crate::modules::users::controllers::jwt::validate_request;
 
 
-pub async fn find_all_medicines(req: HttpRequest, db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {
+pub async fn find_all_medicines(req: HttpRequest, 
+                                db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
             let medicines = Database::get_all_medicines(&db).await;
@@ -20,7 +21,9 @@ pub async fn find_all_medicines(req: HttpRequest, db: Data<Database>) -> Result<
     }
 }
 
-pub async fn insert_medicine(medicine: Json<MedicineDTO>, req: HttpRequest, db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
+pub async fn insert_medicine(medicine: Json<MedicineDTO>, 
+                             req: HttpRequest, 
+                             db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {     
             let is_valid = medicine.validate();
@@ -55,9 +58,9 @@ pub async fn insert_medicine(medicine: Json<MedicineDTO>, req: HttpRequest, db: 
     }
 }
 
-pub async fn update_medicine(update_medicine_url: Path<UpdateMedicineURL>, req: HttpRequest,
-                      db: Data<Database>, 
-                      updated_medicine_request: Json<MedicineDTO>) -> Result<Json<Medicine>, MedicineError> {
+pub async fn update_medicine(update_medicine_url: Path<MedicineUrlUuid>, 
+                             req: HttpRequest, db: Data<Database>, 
+                             updated_medicine_request: Json<MedicineDTO>) -> Result<Json<Medicine>, MedicineError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
             let uuid = update_medicine_url.into_inner().uuid;
@@ -76,6 +79,22 @@ pub async fn update_medicine(update_medicine_url: Path<UpdateMedicineURL>, req: 
             let update_result = Database::update_medicine(&db, uuid, updated_medicine).await;
             match update_result {
                 Some(updated_medicine) => Ok(Json(updated_medicine)),
+                None => Err(MedicineError::NoSuchMedicineFound)
+            }
+        }
+        Err(_) => Err(MedicineError::WrongPassword),
+    }
+}
+
+pub async fn delete_medicine(delete_medicine_url: Path<MedicineUrlUuid>, 
+                             req: HttpRequest, db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
+    match validate_request(req, &db.clone()).await {
+        Ok(_) => {
+            let uuid = delete_medicine_url.into_inner().uuid;
+            let result = Database::delete_medicine(&db, uuid).await;
+
+            match result {
+                Some(result) => Ok(Json(result)),
                 None => Err(MedicineError::NoSuchMedicineFound)
             }
         }

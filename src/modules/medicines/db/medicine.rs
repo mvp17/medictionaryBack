@@ -36,6 +36,6 @@ impl Medicine {
 }
 
 #[derive(Validate, Deserialize, Serialize)]
-pub struct UpdateMedicineURL {
+pub struct MedicineUrlUuid {
   pub uuid: String
 }

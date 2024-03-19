@@ -9,6 +9,7 @@ pub trait MedicineDataTrait {
     async fn get_all_medicines(db: &Data<Database>) -> Option<Vec<Medicine>>;
     async fn add_medicine(db: &Data<Database>, new_medicine: Medicine) -> Option<Medicine>;
     async fn update_medicine(db: &Data<Database>, uuid: String, updated_medicine: Medicine) -> Option<Medicine>;
+    async fn delete_medicine(db: &Data<Database>, uuid: String) -> Option<Medicine>;
 }
 
 #[async_trait]
@@ -58,6 +59,14 @@ impl MedicineDataTrait for Database {
                 }
             }
             Err(_) => None
+        }
+    }
+
+    async fn delete_medicine(db: &Data<Database>, uuid: String) -> Option<Medicine> {
+        let result: Result<Option<Medicine>, Error> = db.client.delete(("medicine", &uuid)).await;
+        match result {
+            Ok(deleted) => deleted,
+            Err(_) => None,
         }
     }
 }

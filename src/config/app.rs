@@ -38,7 +38,7 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                         web::resource("/{uuid}")
                             //.route(web::get().to(alarms::find_by_id))
                             .route(web::put().to(alarms::update_alarm))
-                            //.route(web::delete().to(address_book_controller::delete)),
+                            .route(web::delete().to(alarms::delete_alarm)),
                     )
             )
             .service(
@@ -50,9 +50,9 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                     )
                     .service(
                         web::resource("/{uuid}")
-                            //.route(web::get().to(alarms::find_by_id))
+                            //.route(web::get().to(medicines::find_by_id))
                             .route(web::put().to(medicines::update_medicine))
-                            //.route(web::delete().to(address_book_controller::delete)),
+                            .route(web::delete().to(medicines::delete_medicine)),
                     )
             )
             .service(
@@ -64,7 +64,7 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                     )
                     .service(
                         web::resource("/{uuid}")
-                            //.route(web::get().to(alarms::find_by_id))
+                            //.route(web::get().to(reminders::find_by_id))
                             .route(web::put().to(reminders::update_reminder))
                             .route(web::delete().to(reminders::delete_reminder)),
                     )
