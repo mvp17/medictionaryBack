@@ -1,6 +1,9 @@
 pub mod user;
 pub use user::User;
 pub use crate::db::Database;
-pub use user::UserDTO;
+pub use user::SignUpRequestDTO;
+pub use user::SignUpResponseDTO;
+pub use user::SignInRequestDTO;
+pub use user::SignInResponseDTO;
 pub use user::DeleteUserURL;
 pub mod user_data_trait;

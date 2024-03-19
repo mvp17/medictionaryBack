@@ -66,7 +66,7 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                         web::resource("/{uuid}")
                             //.route(web::get().to(alarms::find_by_id))
                             .route(web::put().to(reminders::update_reminder))
-                            //.route(web::delete().to(address_book_controller::delete)),
+                            .route(web::delete().to(reminders::delete_reminder)),
                     )
             )
     );

@@ -15,8 +15,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(
                 Cors::default() // allowed_origin return access-control-allow-origin: * by default
-                    .allowed_origin("http://127.0.0.1:3000")
-                    .allowed_origin("http://localhost:3000")
+                    .allowed_origin("http://127.0.0.1:5173")
+                    .allowed_origin("http://localhost:5173")
                     .send_wildcard()
                     .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
                     .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])

@@ -32,6 +32,6 @@ impl Reminder {
 }
 
 #[derive(Validate, Deserialize, Serialize)]
-pub struct UpdateReminderURL {
+pub struct ReminderUrlUuid {
   pub uuid: String
 }

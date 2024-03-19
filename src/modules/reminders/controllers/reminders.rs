@@ -1,7 +1,7 @@
 use actix_web::HttpRequest;
 use actix_web::{ web::Path, web::Data, web::Json };
 use crate::modules::reminders::error::ReminderError;
-use crate::modules::reminders::db::{ Reminder, ReminderDTO, UpdateReminderURL };
+use crate::modules::reminders::db::{ Reminder, ReminderDTO, ReminderUrlUuid };
 use crate::modules::reminders::db::{ reminder_data_trait::ReminderDataTrait, Database };
 use validator::Validate;
 use crate::modules::users::controllers::jwt::validate_request;
@@ -54,7 +54,7 @@ pub async fn insert_reminder(reminder: Json<ReminderDTO>, req: HttpRequest,
     }
 }
 
-pub async fn update_reminder(update_reminder_url: Path<UpdateReminderURL>, req: HttpRequest,
+pub async fn update_reminder(update_reminder_url: Path<ReminderUrlUuid>, req: HttpRequest,
                       db: Data<Database>, 
                       updated_reminder_request: Json<ReminderDTO>) -> Result<Json<Reminder>, ReminderError> {
     match validate_request(req, &db.clone()).await {
@@ -73,6 +73,22 @@ pub async fn update_reminder(update_reminder_url: Path<UpdateReminderURL>, req: 
             let update_result = Database::update_reminder(&db, uuid, updated_reminder).await;
             match update_result {
                 Some(updated_reminder) => Ok(Json(updated_reminder)),
+                None => Err(ReminderError::NoSuchReminderFound)
+            }
+        }
+        Err(_) => Err(ReminderError::WrongPassword),
+    }
+}
+
+pub async fn delete_reminder(delete_reminder_url: Path<ReminderUrlUuid>, 
+                             req: HttpRequest, db: Data<Database>) -> Result<Json<Reminder>, ReminderError> {
+    match validate_request(req, &db.clone()).await {
+        Ok(_) => {
+            let uuid = delete_reminder_url.into_inner().uuid;
+            let result = Database::delete_reminder(&db, uuid).await;
+
+            match result {
+                Some(result) => Ok(Json(result)),
                 None => Err(ReminderError::NoSuchReminderFound)
             }
         }

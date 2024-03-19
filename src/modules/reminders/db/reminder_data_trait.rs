@@ -9,6 +9,7 @@ pub trait ReminderDataTrait {
     async fn get_all_reminders(db: &Data<Database>) -> Option<Vec<Reminder>>;
     async fn add_reminder(db: &Data<Database>, new_medicine: Reminder) -> Option<Reminder>;
     async fn update_reminder(db: &Data<Database>, uuid: String, updated_reminder: Reminder) -> Option<Reminder>;
+    async fn delete_reminder(db: &Data<Database>, uuid: String) -> Option<Reminder>;
 }
 
 #[async_trait]
@@ -57,6 +58,14 @@ impl ReminderDataTrait for Database {
                 }
             }
             Err(_) => None
+        }
+    }
+
+    async fn delete_reminder(db: &Data<Database>, uuid: String) -> Option<Reminder> {
+        let result: Result<Option<Reminder>, Error> = db.client.delete(("reminder", &uuid)).await;
+        match result {
+            Ok(deleted) => deleted,
+            Err(_) => None,
         }
     }
 }

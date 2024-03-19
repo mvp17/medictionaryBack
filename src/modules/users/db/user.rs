@@ -4,11 +4,17 @@ use bcrypt::{hash, verify};
 
 
 #[derive(Validate, Serialize, Deserialize)]
-pub struct UserDTO {
+pub struct SignUpRequestDTO {
   #[validate(length(min = 1))]
   pub username: String,
   pub email: String,
   pub password: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct SignUpResponseDTO {
+  pub username: String,
+  pub email: String
 }
 
 #[derive(Validate, Debug, Serialize, Deserialize, Default)]
@@ -20,9 +26,14 @@ pub struct User {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct LoginDTO {
-  pub email: String,
-  pub password: String,
+pub struct SignInRequestDTO {
+  pub username: String,
+  pub password: String
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct SignInResponseDTO {
+  pub token: String
 }
 
 impl User {
