@@ -1,4 +1,4 @@
-use crate::features::reminders::db::Reminder;
+use crate::modules::reminders::db::Reminder;
 use crate::db::Database;
 use actix_web::web::Data;
 use async_trait::async_trait;

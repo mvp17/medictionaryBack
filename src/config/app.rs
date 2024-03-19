@@ -1,8 +1,8 @@
 use actix_web::web;
-use crate::features::alarms::controllers::alarms;
-use crate::features::users::controllers::users;
-use crate::features::medicines::controllers::medicines;
-use crate::features::reminders::controllers::reminders;
+use crate::modules::alarms::controllers::alarms;
+use crate::modules::users::controllers::users;
+use crate::modules::medicines::controllers::medicines;
+use crate::modules::reminders::controllers::reminders;
 
 
 pub fn config_services(cfg: &mut web::ServiceConfig) {

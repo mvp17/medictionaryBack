@@ -1,4 +1,4 @@
-use crate::features::alarms::db::Alarm;
+use crate::modules::alarms::db::Alarm;
 use crate::db::Database;
 use actix_web::web::Data;
 use async_trait::async_trait;

@@ -1,10 +1,10 @@
 use actix_web::HttpRequest;
 use actix_web::{ web::Path, web::Data, web::Json };
-use crate::features::medicines::error::MedicineError;
-use crate::features::medicines::db::{ MedicineDTO, UpdateMedicineURL, Medicine };
-use crate::features::medicines::db::{ medicine_data_trait::MedicineDataTrait, Database };
+use crate::modules::medicines::error::MedicineError;
+use crate::modules::medicines::db::{ MedicineDTO, UpdateMedicineURL, Medicine };
+use crate::modules::medicines::db::{ medicine_data_trait::MedicineDataTrait, Database };
 use validator::Validate;
-use crate::features::users::controllers::jwt::validate_request;
+use crate::modules::users::controllers::jwt::validate_request;
 
 
 pub async fn find_all_medicines(req: HttpRequest, db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {

@@ -1,7 +1,7 @@
-use crate::features::users::controllers::JsonMessage;
-use crate::features::users::db::User;
+use crate::modules::users::controllers::JsonMessage;
+use crate::modules::users::db::User;
 use actix_web::web::Data;
-use crate::features::users::db::{ user_data_trait::UserDataTrait, Database };
+use crate::modules::users::db::{ user_data_trait::UserDataTrait, Database };
 use actix_web::{HttpRequest, HttpResponse};
 use jsonwebtoken::errors::Error as JwtError;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};

@@ -1,4 +1,4 @@
-use crate::features::users::db::User;
+use crate::modules::users::db::User;
 use crate::db::Database;
 use actix_web::web::Data;
 use async_trait::async_trait;
