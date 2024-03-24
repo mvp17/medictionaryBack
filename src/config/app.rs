@@ -3,6 +3,7 @@ use crate::modules::alarms::controllers::alarms;
 use crate::modules::users::controllers::users;
 use crate::modules::medicines::controllers::medicines;
 use crate::modules::reminders::controllers::reminders;
+use crate::modules::survey::controllers::survey;
 
 
 pub fn config_services(cfg: &mut web::ServiceConfig) {
@@ -67,6 +68,13 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                             //.route(web::get().to(reminders::find_by_id))
                             .route(web::put().to(reminders::update_reminder))
                             .route(web::delete().to(reminders::delete_reminder)),
+                    )
+            )
+            .service(
+                web::scope("/survey")
+                    .service(
+                        web::resource("")
+                            .route(web::post().to(survey::register_survey)),
                     )
             )
     );
