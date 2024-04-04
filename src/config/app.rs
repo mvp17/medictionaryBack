@@ -51,7 +51,7 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                     )
                     .service(
                         web::resource("/{uuid}")
-                            //.route(web::get().to(medicines::find_by_id))
+                            .route(web::get().to(medicines::find_medicine_by_id))
                             .route(web::put().to(medicines::update_medicine))
                             .route(web::delete().to(medicines::delete_medicine)),
                     )

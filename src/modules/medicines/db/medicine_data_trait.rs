@@ -7,6 +7,7 @@ use surrealdb::Error;
 #[async_trait]
 pub trait MedicineDataTrait {
     async fn get_all_medicines(db: &Data<Database>) -> Option<Vec<Medicine>>;
+    async fn get_medicine_by_id(db: &Data<Database>, uuid: String) -> Option<Medicine>;
     async fn add_medicine(db: &Data<Database>, new_medicine: Medicine) -> Option<Medicine>;
     async fn update_medicine(db: &Data<Database>, uuid: String, updated_medicine: Medicine) -> Option<Medicine>;
     async fn delete_medicine(db: &Data<Database>, uuid: String) -> Option<Medicine>;
@@ -18,6 +19,14 @@ impl MedicineDataTrait for Database {
         let result = db.client.select("medicine").await;
         match result {
             Ok(all_medicines) => Some(all_medicines),
+            Err(_) => None,
+        }
+    }
+
+    async fn get_medicine_by_id(db: &Data<Database>, uuid: String) -> Option<Medicine> {
+        let result = db.client.select(("medicine", &uuid)).await;
+        match result {
+            Ok(medicine) => medicine,
             Err(_) => None,
         }
     }
@@ -47,7 +56,8 @@ impl MedicineDataTrait for Database {
                                 name: updated_medicine.name,
                                 description: updated_medicine.description,
                                 side_effects: updated_medicine.side_effects,
-                                total_daily_dosage: updated_medicine.total_daily_dosage
+                                total_daily_dosage: updated_medicine.total_daily_dosage,
+                                directions_of_use: updated_medicine.directions_of_use
                             })
                             .await;
                         match updated_medicine {

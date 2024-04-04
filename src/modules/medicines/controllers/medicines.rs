@@ -21,6 +21,22 @@ pub async fn find_all_medicines(req: HttpRequest,
     }
 }
 
+pub async fn find_medicine_by_id(medicine_url_uuid: Path<MedicineUrlUuid>, 
+                                 req: HttpRequest, 
+                                 db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
+    match validate_request(req, &db.clone()).await {
+        Ok(_) => {
+            let uuid = medicine_url_uuid.into_inner().uuid;
+            let medicine = Database::get_medicine_by_id(&db, uuid).await;
+            match medicine {
+                Some(found_medicine) => Ok(Json(found_medicine)),
+                None => Err(MedicineError::NoMedicinesFound)
+            }
+        }
+        Err(_) => Err(MedicineError::WrongPassword),
+    }
+}
+
 pub async fn insert_medicine(medicine: Json<MedicineDTO>, 
                              req: HttpRequest, 
                              db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
@@ -33,6 +49,7 @@ pub async fn insert_medicine(medicine: Json<MedicineDTO>,
                     let description = medicine.description.clone(); 
                     let side_effects = medicine.side_effects.clone();
                     let total_daily_dosage = medicine.total_daily_dosage.clone();
+                    let directions_of_use = medicine.directions_of_use.clone();
 
                     let mut buffer = uuid::Uuid::encode_buffer();
                     let new_uuid = uuid::Uuid::new_v4().simple().encode_lower(&mut buffer);
@@ -41,7 +58,8 @@ pub async fn insert_medicine(medicine: Json<MedicineDTO>,
                         name,
                         description,
                         side_effects,
-                        total_daily_dosage
+                        total_daily_dosage,
+                        directions_of_use
                     )).await;
 
                     match new_medicine {
@@ -58,23 +76,25 @@ pub async fn insert_medicine(medicine: Json<MedicineDTO>,
     }
 }
 
-pub async fn update_medicine(update_medicine_url: Path<MedicineUrlUuid>, 
+pub async fn update_medicine(medicine_url_uuid: Path<MedicineUrlUuid>, 
                              req: HttpRequest, db: Data<Database>, 
                              updated_medicine_request: Json<MedicineDTO>) -> Result<Json<Medicine>, MedicineError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
-            let uuid = update_medicine_url.into_inner().uuid;
+            let uuid = medicine_url_uuid.into_inner().uuid;
             let name = updated_medicine_request.name.clone();
             let description = updated_medicine_request.description.clone(); 
             let side_effects = updated_medicine_request.side_effects.clone(); 
             let total_daily_dosage = updated_medicine_request.total_daily_dosage.clone();
+            let directions_of_use = updated_medicine_request.directions_of_use.clone();
 
             let updated_medicine = Medicine::new(
                                         String::from(uuid.clone()),
                                         name,
                                         description,
                                         side_effects,
-                                        total_daily_dosage
+                                        total_daily_dosage,
+                                        directions_of_use
                                         );
             let update_result = Database::update_medicine(&db, uuid, updated_medicine).await;
             match update_result {
@@ -86,11 +106,11 @@ pub async fn update_medicine(update_medicine_url: Path<MedicineUrlUuid>,
     }
 }
 
-pub async fn delete_medicine(delete_medicine_url: Path<MedicineUrlUuid>, 
+pub async fn delete_medicine(medicine_url_uuid: Path<MedicineUrlUuid>, 
                              req: HttpRequest, db: Data<Database>) -> Result<Json<Medicine>, MedicineError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
-            let uuid = delete_medicine_url.into_inner().uuid;
+            let uuid = medicine_url_uuid.into_inner().uuid;
             let result = Database::delete_medicine(&db, uuid).await;
 
             match result {

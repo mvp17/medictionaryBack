@@ -8,6 +8,7 @@ pub struct MedicineDTO {
   pub description: String,
   pub side_effects: String,
   pub total_daily_dosage: u32,
+  pub directions_of_use: String
 }
 
 #[derive(Validate, Serialize, Deserialize, Debug)]
@@ -17,6 +18,7 @@ pub struct Medicine {
   pub description: String,
   pub side_effects: String,
   pub total_daily_dosage: u32,
+  pub directions_of_use: String,
 }
 
 impl Medicine {
@@ -24,13 +26,15 @@ impl Medicine {
              name: String, 
              description: String, 
              side_effects: String, 
-             total_daily_dosage: u32) -> Medicine {
+             total_daily_dosage: u32,
+             directions_of_use: String) -> Medicine {
     Medicine {
       uuid,
       name,
       description,
       side_effects,
-      total_daily_dosage
+      total_daily_dosage,
+      directions_of_use
     }
   }
 }
