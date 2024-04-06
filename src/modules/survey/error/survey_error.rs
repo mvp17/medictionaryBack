@@ -7,7 +7,8 @@ use derive_more::Display;
 #[derive(Debug, Display)]
 pub enum SurveyError {
     SurveyCreationFailure,
-    //NoSuchSurveyFound,
+    AlreadyRegistered,
+    NoSuchSurveyFound,
     WrongPassword
 }
 
@@ -21,7 +22,8 @@ impl ResponseError for SurveyError {
     fn status_code(&self) -> StatusCode {
         match self {
             SurveyError::SurveyCreationFailure => StatusCode::INTERNAL_SERVER_ERROR,
-            //SurveyError::NoSuchSurveyFound => StatusCode::NOT_FOUND,
+            SurveyError::NoSuchSurveyFound => StatusCode::NOT_FOUND,
+            SurveyError::AlreadyRegistered => StatusCode::CONFLICT,
             SurveyError::WrongPassword => StatusCode::FORBIDDEN,
         }
     }

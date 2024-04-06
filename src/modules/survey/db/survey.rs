@@ -48,3 +48,23 @@ impl Survey {
     }
   }
 }
+
+impl Clone for Survey {
+  fn clone(&self) -> Self {
+    Survey {
+      uuid: self.uuid.clone(),
+      smoker: self.smoker.clone(),
+      drinker: self.drinker.clone(),
+      breakfast: self.breakfast.clone(),
+      lunch: self.lunch.clone(),
+      cold_md: self.cold_md.clone(),
+      prescribed: self.prescribed.clone(),
+      allergy: self.allergy.clone()
+    }
+  }
+}
+
+#[derive(Validate, Deserialize, Serialize)]
+pub struct SurveyUrlUuid {
+  pub uuid: String
+}

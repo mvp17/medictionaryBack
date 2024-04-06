@@ -12,16 +12,16 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
             .service(
                 web::scope("/auth")
                     .service(
-                        web::resource("/signup").route(web::post().to(users::signup)),
+                        web::resource("/signup").route(web::post().to(users::signup))
                     )
                     .service(
-                        web::resource("/signin").route(web::post().to(users::signin)),
+                        web::resource("/signin").route(web::post().to(users::signin))
                     )
                     .service(
-                        web::resource("/get-users").route(web::get().to(users::find_all_users)),
+                        web::resource("/get-users").route(web::get().to(users::find_all_users))
                     )
                     .service(
-                        web::resource("/delete-user/{uuid}").route(web::delete().to(users::delete_user)),
+                        web::resource("/delete-user/{uuid}").route(web::delete().to(users::delete_user))
                     )
                     /*
                     .service(
@@ -33,13 +33,13 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                     .service(
                         web::resource("")
                             .route(web::get().to(alarms::find_all_alarms))
-                            .route(web::post().to(alarms::insert_alarm)),
+                            .route(web::post().to(alarms::insert_alarm))
                     )
                     .service(
                         web::resource("/{uuid}")
                             //.route(web::get().to(alarms::find_by_id))
                             .route(web::put().to(alarms::update_alarm))
-                            .route(web::delete().to(alarms::delete_alarm)),
+                            .route(web::delete().to(alarms::delete_alarm))
                     )
             )
             .service(
@@ -47,13 +47,13 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                     .service(
                         web::resource("")
                             .route(web::get().to(medicines::find_all_medicines))
-                            .route(web::post().to(medicines::insert_medicine)),
+                            .route(web::post().to(medicines::insert_medicine))
                     )
                     .service(
                         web::resource("/{uuid}")
                             .route(web::get().to(medicines::find_medicine_by_id))
                             .route(web::put().to(medicines::update_medicine))
-                            .route(web::delete().to(medicines::delete_medicine)),
+                            .route(web::delete().to(medicines::delete_medicine))
                     )
             )
             .service(
@@ -61,20 +61,25 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                     .service(
                         web::resource("")
                             .route(web::get().to(reminders::find_all_reminders))
-                            .route(web::post().to(reminders::insert_reminder)),
+                            .route(web::post().to(reminders::insert_reminder))
                     )
                     .service(
                         web::resource("/{uuid}")
                             //.route(web::get().to(reminders::find_by_id))
                             .route(web::put().to(reminders::update_reminder))
-                            .route(web::delete().to(reminders::delete_reminder)),
+                            .route(web::delete().to(reminders::delete_reminder))
                     )
             )
             .service(
                 web::scope("/survey")
                     .service(
                         web::resource("")
-                            .route(web::post().to(survey::register_survey)),
+                            .route(web::get().to(survey::find_survey))
+                            .route(web::post().to(survey::register_survey))
+                    )
+                    .service(
+                        web::resource("/{uuid}")
+                            .route(web::put().to(survey::update_survey))
                     )
             )
     );

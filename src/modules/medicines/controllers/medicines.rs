@@ -7,7 +7,7 @@ use validator::Validate;
 use crate::modules::users::controllers::jwt::validate_request;
 
 
-pub async fn find_all_medicines(req: HttpRequest, 
+pub async fn find_all_medicines(req: HttpRequest,
                                 db: Data<Database>) -> Result<Json<Vec<Medicine>>, MedicineError> {
     match validate_request(req, &db.clone()).await {
         Ok(_) => {
