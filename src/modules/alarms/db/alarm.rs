@@ -5,6 +5,7 @@ use validator::Validate;
 pub struct AlarmDTO {
   #[validate(length(min = 1))]
   pub name: String,
+  pub medicine_uuid: String,
   pub time_taking_pill: String,
   pub total_daily_amount: u32,
   pub treatment_length: u32,
@@ -17,6 +18,7 @@ pub struct AlarmDTO {
 pub struct Alarm {
   pub uuid: String,
   pub name: String,
+  pub medicine_uuid: String,
   pub time_taking_pill: String,
   pub total_daily_amount: u32,
   pub treatment_length: u32,
@@ -27,7 +29,8 @@ pub struct Alarm {
 
 impl Alarm {
   pub fn new(uuid: String, 
-             name: String, 
+             name: String,
+             medicine_uuid: String,
              time_taking_pill: String, 
              total_daily_amount: u32, 
              treatment_length: u32, 
@@ -37,6 +40,7 @@ impl Alarm {
     Alarm {
       uuid,
       name,
+      medicine_uuid,
       time_taking_pill,
       total_daily_amount,
       treatment_length,

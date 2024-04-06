@@ -45,6 +45,7 @@ impl AlarmDataTrait for Database {
                             .merge(Alarm {
                                 uuid,
                                 name: updated_alarm.name,
+                                medicine_uuid: updated_alarm.medicine_uuid,
                                 time_taking_pill: updated_alarm.time_taking_pill,
                                 total_daily_amount: updated_alarm.total_daily_amount,
                                 treatment_length: updated_alarm.treatment_length,

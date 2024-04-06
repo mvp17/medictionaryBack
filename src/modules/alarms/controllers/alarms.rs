@@ -29,6 +29,7 @@ pub async fn insert_alarm(alarm: Json<AlarmDTO>,
             match is_valid {
                 Ok(_) => {
                     let name = alarm.name.clone();
+                    let medicine_uuid = alarm.medicine_uuid.clone();
                     let time_taking_pill = alarm.time_taking_pill.clone(); 
                     let total_daily_amount = alarm.total_daily_amount.clone(); 
                     let treatment_length = alarm.treatment_length.clone();
@@ -41,6 +42,7 @@ pub async fn insert_alarm(alarm: Json<AlarmDTO>,
                     let new_alarm = Database::add_alarm(&db, Alarm::new(
                         String::from(new_uuid),
                         name,
+                        medicine_uuid,
                         time_taking_pill,
                         total_daily_amount,
                         treatment_length,
@@ -70,6 +72,7 @@ pub async fn update_alarm(update_alarm_url: Path<AlarmUrlUuid>,
         Ok(_) => {
             let uuid = update_alarm_url.into_inner().uuid;
             let name = updated_alarm_request.name.clone();
+            let medicine_uuid = updated_alarm_request.medicine_uuid.clone();
             let time_taking_pill = updated_alarm_request.time_taking_pill.clone(); 
             let total_daily_amount = updated_alarm_request.total_daily_amount.clone(); 
             let treatment_length = updated_alarm_request.treatment_length.clone();
@@ -80,6 +83,7 @@ pub async fn update_alarm(update_alarm_url: Path<AlarmUrlUuid>,
             let updated_alarm = Alarm::new(
                                         String::from(uuid.clone()),
                                         name,
+                                        medicine_uuid,
                                         time_taking_pill,
                                         total_daily_amount,
                                         treatment_length,
